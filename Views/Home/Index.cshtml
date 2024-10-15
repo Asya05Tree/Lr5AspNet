@@ -1,0 +1,39 @@
+﻿@model CookieInputModel
+@{
+    ViewData["Title"] = "Головна";
+}
+<div class="container mt-4">
+    <h2 class="mb-4">Встановлення куки</h2>
+    <form asp-controller="Home" asp-action="SubmitCookie" method="post" id="cookieForm">
+        <div class="mb-3">
+            <label asp-for="Value" class="form-label">Значення:</label>
+            <input asp-for="Value" class="form-control" required />
+            <span asp-validation-for="Value" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ExpirationDate" class="form-label">Дата та час закінчення:</label>
+            <input asp-for="ExpirationDate" type="datetime-local" class="form-control" required />
+            <span asp-validation-for="ExpirationDate" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Відправити</button>
+    </form>
+    <div class="mt-4">
+        <img src="/api/placeholder/400/300" alt="Зображення куки" class="img-fluid" />
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#cookieForm').submit(function (event) {
+                var expirationDate = new Date($('#ExpirationDate').val());
+                var currentDate = new Date();
+                if (expirationDate < currentDate) {
+                    event.preventDefault();
+                    if (confirm('Введена дата вже минула. Ви впевнені, що хочете встановити таку дату?')) {
+                        $(this).off('submit').submit();
+                    }
+                }
+            });
+        });
+    </script>
+}
